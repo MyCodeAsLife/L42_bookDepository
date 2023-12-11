@@ -42,6 +42,8 @@ namespace L42_bookDepository
 
                 if (int.TryParse(Console.ReadLine(), out menuNumber))
                 {
+                    Console.Clear();
+
                     switch (menuNumber)
                     {
                         case CommandAddBook:
@@ -62,25 +64,25 @@ namespace L42_bookDepository
 
                         case CommandExit:
                             isOpen = false;
-                            break;
+                            continue;
 
                         default:
                             ShowError();
                             break;
                     }
-
-                    Console.ReadKey(true);
                 }
                 else
                 {
                     ShowError();
                 }
+
+                Console.WriteLine("\nДля для возврата в меню нажмите любую клавишу...");
+                Console.ReadKey(true);
             }
         }
 
         static Book CreateNewBook()
         {
-            Console.Clear();
             Console.Write("Введите имя книги: ");
             string bookName = Console.ReadLine();
 
@@ -95,7 +97,6 @@ namespace L42_bookDepository
 
         static void DeleteByIndex(Depository depository)
         {
-            Console.Clear();
             Console.Write("Введите номер книги которую необходимо удалить: ");
             int numberBook = GetUserInt() - 1;
 
@@ -107,7 +108,6 @@ namespace L42_bookDepository
 
         static void SearchByParametrs(Depository depository)
         {
-            Console.Clear();
             Console.Write("Введите данные о книгах которые нужно найти\n(Автор, Название, Год выпуска): ");
             string userInput = Console.ReadLine();
 
@@ -126,46 +126,24 @@ namespace L42_bookDepository
 
         static void ShowError()
         {
-            Console.WriteLine("Вы ввели некорректные данные.\nДля продолжения нажмите любую клавишу...");
-            Console.ReadKey(true);
+            Console.Clear();
+            Console.WriteLine("Вы ввели некорректные данные.");
         }
 
         class Book
         {
-            private string _name;
-            private string _author;
-            private string _yearIssue;
-
             public Book(string name, string author, string yearIssue)
             {
-                _name = name;
-                _author = author;
-                _yearIssue = yearIssue;
+                this.Name = name;
+                this.Author = author;
+                this.YearIssue = yearIssue;
             }
 
-            public string Name
-            {
-                get
-                {
-                    return _name;
-                }
-            }
+            public string Name { get; private set; }
 
-            public string Author
-            {
-                get
-                {
-                    return _author;
-                }
-            }
+            public string Author { get; private set; }
 
-            public string YearIssue
-            {
-                get
-                {
-                    return _yearIssue;
-                }
-            }
+            public string YearIssue { get; private set; }
         }
 
         class Depository
@@ -234,8 +212,8 @@ namespace L42_bookDepository
 
                 if (isFind == false)
                 {
-                    Console.WriteLine("По указанному параметру нинайде не одной книги.");
-                    Console.ReadKey(true);
+                    Console.Clear();
+                    Console.WriteLine("По указанному параметру не найдено ни одной книги.");
                 }
             }
         }
