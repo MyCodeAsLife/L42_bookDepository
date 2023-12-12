@@ -95,7 +95,7 @@ namespace L42_bookDepository
         static void DeleteByIndex(Depository depository)
         {
             Console.Write("Введите номер книги которую необходимо удалить: ");
-            int numberBook = GetUserInt() - 1;
+            int numberBook = GetFormatInput();
 
             if (numberBook >= 0 && numberBook < depository.Count)
                 depository.RemoveBook(numberBook);
@@ -111,12 +111,12 @@ namespace L42_bookDepository
             depository.FindBooks(userInput);
         }
 
-        static int GetUserInt()
+        static int GetFormatInput()
         {
             int result;
 
             if (int.TryParse(Console.ReadLine(), out result))
-                return result;
+                return result - 1;
             else
                 return -1;
         }
@@ -126,92 +126,92 @@ namespace L42_bookDepository
             Console.Clear();
             Console.WriteLine("Вы ввели некорректные данные.");
         }
+    }
 
-        class Book
+    class Book
+    {
+        public Book(string name, string author, string yearIssue)
         {
-            public Book(string name, string author, string yearIssue)
-            {
-                this.Name = name;
-                this.Author = author;
-                this.YearIssue = yearIssue;
-            }
-
-            public string Name { get; private set; }
-
-            public string Author { get; private set; }
-
-            public string YearIssue { get; private set; }
+            this.Name = name;
+            this.Author = author;
+            this.YearIssue = yearIssue;
         }
 
-        class Depository
+        public string Name { get; private set; }
+
+        public string Author { get; private set; }
+
+        public string YearIssue { get; private set; }
+    }
+
+    class Depository
+    {
+        private List<Book> _books = new List<Book>();
+
+        public int Count
         {
-            private List<Book> _books = new List<Book>();
-
-            public int Count
+            get
             {
-                get
+                return _books.Count;
+            }
+        }
+
+        public void AddBook(Book book)
+        {
+            _books.Add(book);
+        }
+
+        public void RemoveBook(int index)
+        {
+            _books.RemoveAt(index);
+        }
+
+        public void ShowBook(int index)
+        {
+            Console.WriteLine($"{index + 1} -\tНаименование: {_books[index].Name}\n\tАвтор: " +
+                              $"{_books[index].Author}\n\tГод написания: {_books[index].YearIssue}");
+        }
+
+        public void ShowAllBooks()
+        {
+            for (int i = 0; i < _books.Count; i++)
+                ShowBook(i);
+        }
+
+        public void FindBooks(string parameter)
+        {
+            bool isFind = false;
+
+            for (int i = 0; i < _books.Count; i++)
+            {
+                if (_books[i].Name.ToLower() == parameter.ToLower())
                 {
-                    return _books.Count;
-                }
-            }
-
-            public void AddBook(Book book)
-            {
-                _books.Add(book);
-            }
-
-            public void RemoveBook(int index)
-            {
-                _books.RemoveAt(index);
-            }
-
-            public void ShowBook(int index)
-            {
-                Console.WriteLine($"{index + 1} -\tНаименование: {_books[index].Name}\n\tАвтор: " +
-                                  $"{_books[index].Author}\n\tГод написания: {_books[index].YearIssue}");
-            }
-
-            public void ShowAllBooks()
-            {
-                for (int i = 0; i < _books.Count; i++)
                     ShowBook(i);
+                    isFind = true;
+                }
+                else if (_books[i].YearIssue.ToLower() == parameter.ToLower())
+                {
+                    ShowBook(i);
+                    isFind = true;
+                }
+                else
+                {
+                    string[] wordArray = _books[i].Author.Split();
+
+                    foreach (string word in wordArray)
+                        if (word.ToLower() == parameter.ToLower())
+                        {
+                            ShowBook(i);
+                            isFind = true;
+                            break;
+                        }
+                }
             }
 
-            public void FindBooks(string parameter)
+            if (isFind == false)
             {
-                bool isFind = false;
-
-                for (int i = 0; i < _books.Count; i++)
-                {
-                    if (_books[i].Name.ToLower() == parameter.ToLower())
-                    {
-                        ShowBook(i);
-                        isFind = true;
-                    }
-                    else if (_books[i].YearIssue.ToLower() == parameter.ToLower())
-                    {
-                        ShowBook(i);
-                        isFind = true;
-                    }
-                    else
-                    {
-                        var array = _books[i].Author.Split();
-
-                        foreach (var item in array)
-                            if (item.ToLower() == parameter.ToLower())
-                            {
-                                ShowBook(i);
-                                isFind = true;
-                                break;
-                            }
-                    }
-                }
-
-                if (isFind == false)
-                {
-                    Console.Clear();
-                    Console.WriteLine("По указанному параметру не найдено ни одной книги.");
-                }
+                Console.Clear();
+                Console.WriteLine("По указанному параметру не найдено ни одной книги.");
             }
         }
     }
