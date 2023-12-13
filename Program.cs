@@ -44,15 +44,15 @@ namespace L42_bookDepository
                     switch (menuNumber)
                     {
                         case CommandAddBook:
-                            depository.AddBook(CreateNewBook());
+                            depository.AddBook(Book.CreateNew());
                             break;
 
                         case CommandRemoveBook:
-                            DeleteByIndex(depository);
+                            depository.DeleteByIndex();
                             break;
 
                         case CommandFindBooks:
-                            SearchByParametrs(depository);
+                            depository.SearchByParametrs();
                             break;
 
                         case CommandShowAllBooks:
@@ -64,64 +64,24 @@ namespace L42_bookDepository
                             continue;
 
                         default:
-                            ShowError();
+                            Erorr.Show();
                             break;
                     }
                 }
                 else
                 {
-                    ShowError();
+                    Erorr.Show();
                 }
 
                 Console.WriteLine("\nДля для возврата в меню нажмите любую клавишу...");
                 Console.ReadKey(true);
             }
         }
+    }
 
-        static Book CreateNewBook()
-        {
-            Console.Write("Введите имя книги: ");
-            string bookName = Console.ReadLine();
-
-            Console.Write("Введите автора книги: ");
-            string author = Console.ReadLine();
-
-            Console.Write("Введите год написания книги: ");
-            string yearIssue = Console.ReadLine();
-
-            return new Book(bookName, author, yearIssue);
-        }
-
-        static void DeleteByIndex(Depository depository)
-        {
-            Console.Write("Введите номер книги которую необходимо удалить: ");
-            int numberBook = GetFormatInput();
-
-            if (numberBook >= 0 && numberBook < depository.Count)
-                depository.RemoveBook(numberBook);
-            else
-                ShowError();
-        }
-
-        static void SearchByParametrs(Depository depository)
-        {
-            Console.Write("Введите данные о книгах которые нужно найти\n(Автор, Название, Год выпуска): ");
-            string userInput = Console.ReadLine();
-
-            depository.FindBooks(userInput);
-        }
-
-        static int GetFormatInput()
-        {
-            int result;
-
-            if (int.TryParse(Console.ReadLine(), out result))
-                return result - 1;
-            else
-                return -1;
-        }
-
-        static void ShowError()
+    class Erorr
+    {
+        public static void Show()
         {
             Console.Clear();
             Console.WriteLine("Вы ввели некорректные данные.");
@@ -142,6 +102,20 @@ namespace L42_bookDepository
         public string Author { get; private set; }
 
         public string YearIssue { get; private set; }
+
+        public static Book CreateNew()
+        {
+            Console.Write("Введите имя книги: ");
+            string bookName = Console.ReadLine();
+
+            Console.Write("Введите автора книги: ");
+            string author = Console.ReadLine();
+
+            Console.Write("Введите год написания книги: ");
+            string yearIssue = Console.ReadLine();
+
+            return new Book(bookName, author, yearIssue);
+        }
     }
 
     class Depository
@@ -213,6 +187,31 @@ namespace L42_bookDepository
                 Console.Clear();
                 Console.WriteLine("По указанному параметру не найдено ни одной книги.");
             }
+        }
+
+        public void DeleteByIndex()
+        {
+            Console.Write("Введите номер книги которую необходимо удалить: ");
+
+            if (int.TryParse(Console.ReadLine(), out int numberBook))
+            {
+                if (numberBook >= 0 && numberBook < Count)
+                    RemoveBook(numberBook);
+                else
+                    Erorr.Show();
+            }
+            else
+            {
+                Erorr.Show();
+            }
+        }
+
+        public void SearchByParametrs()
+        {
+            Console.Write("Введите данные о книгах которые нужно найти\n(Автор, Название, Год выпуска): ");
+            string userInput = Console.ReadLine();
+
+            FindBooks(userInput);
         }
     }
 }
