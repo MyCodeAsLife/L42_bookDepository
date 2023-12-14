@@ -15,16 +15,6 @@ namespace L42_bookDepository
 
             Depository depository = new Depository();
 
-            Book book1 = new Book("Двойник", "Достоевский Федр Михайлович", "1846");
-            Book book2 = new Book("Война и Мир", "Толстой Лев Николаевич", "1867");
-            Book book3 = new Book("Памятник", "Пушкин Александр Сергеевич", "1841");
-            Book book4 = new Book("Мцыри", "Лермонтов Михаил Юрьевич", "1840");
-
-            depository.AddBook(book1);
-            depository.AddBook(book2);
-            depository.AddBook(book3);
-            depository.AddBook(book4);
-
             bool isOpen = true;
 
             while (isOpen)
@@ -44,11 +34,11 @@ namespace L42_bookDepository
                     switch (menuNumber)
                     {
                         case CommandAddBook:
-                            depository.AddBook(Book.CreateNew());
+                            depository.AddBook();
                             break;
 
                         case CommandRemoveBook:
-                            depository.DeleteByIndex();
+                            depository.RemoveBook();
                             break;
 
                         case CommandFindBooks:
@@ -64,13 +54,13 @@ namespace L42_bookDepository
                             continue;
 
                         default:
-                            Erorr.Show();
+                            Error.Show();
                             break;
                     }
                 }
                 else
                 {
-                    Erorr.Show();
+                    Error.Show();
                 }
 
                 Console.WriteLine("\nДля для возврата в меню нажмите любую клавишу...");
@@ -79,7 +69,7 @@ namespace L42_bookDepository
         }
     }
 
-    class Erorr
+    class Error
     {
         public static void Show()
         {
@@ -92,9 +82,9 @@ namespace L42_bookDepository
     {
         public Book(string name, string author, string yearIssue)
         {
-            this.Name = name;
-            this.Author = author;
-            this.YearIssue = yearIssue;
+            Name = name;
+            Author = author;
+            YearIssue = yearIssue;
         }
 
         public string Name { get; private set; }
@@ -122,22 +112,17 @@ namespace L42_bookDepository
     {
         private List<Book> _books = new List<Book>();
 
+        public Depository()
+        {
+            Fill();
+        }
+
         public int Count
         {
             get
             {
                 return _books.Count;
             }
-        }
-
-        public void AddBook(Book book)
-        {
-            _books.Add(book);
-        }
-
-        public void RemoveBook(int index)
-        {
-            _books.RemoveAt(index);
         }
 
         public void ShowBook(int index)
@@ -152,7 +137,44 @@ namespace L42_bookDepository
                 ShowBook(i);
         }
 
-        public void FindBooks(string parameter)
+        public void AddBook()
+        {
+            Console.Write("Введите имя книги: ");
+            string bookName = Console.ReadLine();
+
+            Console.Write("Введите автора книги: ");
+            string author = Console.ReadLine();
+
+            Console.Write("Введите год написания книги: ");
+            string yearIssue = Console.ReadLine();
+
+            _books.Add(new Book(bookName, author, yearIssue));
+        }
+
+        public void RemoveBook()
+        {
+            Console.Write("Введите номер книги которую необходимо удалить: ");
+
+            if (int.TryParse(Console.ReadLine(), out int numberBook))
+            {
+                numberBook--;
+
+                if (numberBook >= 0 && numberBook < Count)
+                    _books.RemoveAt(numberBook);
+                else
+                    Error.Show();
+            }
+        }
+
+        public void SearchByParametrs()
+        {
+            Console.Write("Введите данные о книгах которые нужно найти\n(Автор, Название, Год выпуска): ");
+            string userInput = Console.ReadLine();
+
+            FindBooks(userInput);
+        }
+
+        private void FindBooks(string parameter)
         {
             bool isFind = false;
 
@@ -177,7 +199,6 @@ namespace L42_bookDepository
                         {
                             ShowBook(i);
                             isFind = true;
-                            break;
                         }
                 }
             }
@@ -189,29 +210,12 @@ namespace L42_bookDepository
             }
         }
 
-        public void DeleteByIndex()
+        private void Fill()
         {
-            Console.Write("Введите номер книги которую необходимо удалить: ");
-
-            if (int.TryParse(Console.ReadLine(), out int numberBook))
-            {
-                if (numberBook >= 0 && numberBook < Count)
-                    RemoveBook(numberBook);
-                else
-                    Erorr.Show();
-            }
-            else
-            {
-                Erorr.Show();
-            }
-        }
-
-        public void SearchByParametrs()
-        {
-            Console.Write("Введите данные о книгах которые нужно найти\n(Автор, Название, Год выпуска): ");
-            string userInput = Console.ReadLine();
-
-            FindBooks(userInput);
+            _books.Add(new Book("Двойник", "Достоевский Федр Михайлович", "1846"));
+            _books.Add(new Book("Война и Мир", "Толстой Лев Николаевич", "1867"));
+            _books.Add(new Book("Памятник", "Пушкин Александр Сергеевич", "1841"));
+            _books.Add(new Book("Мцыри", "Лермонтов Михаил Юрьевич", "1840"));
         }
     }
 }
