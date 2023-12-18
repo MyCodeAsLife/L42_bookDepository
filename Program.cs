@@ -124,8 +124,9 @@ namespace L42_bookDepository
 
         private void ShowBook(int index)
         {
-            Console.WriteLine($"{index + 1} -\tНаименование: {_books[index].Name}\n\tАвтор: " +
-                              $"{_books[index].Author}\n\tГод написания: {_books[index].YearIssue}");
+            if (index < _books.Count || index >= 0)
+                Console.WriteLine($"{index + 1} -\tНаименование: {_books[index].Name}\n\tАвтор: " +
+                                  $"{_books[index].Author}\n\tГод написания: {_books[index].YearIssue}");
         }
 
         private void ShowAllBooks()
