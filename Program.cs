@@ -67,8 +67,6 @@ namespace L42_bookDepository
             StartingFill();
         }
 
-        private int Count => _books.Count;
-
         public void Run()
         {
             bool isOpen = true;
@@ -158,7 +156,7 @@ namespace L42_bookDepository
             {
                 numberBook--;
 
-                if (numberBook >= 0 && numberBook < Count)
+                if (numberBook >= 0 && numberBook < _books.Count)
                     _books.RemoveAt(numberBook);
                 else
                     Error.Show();
