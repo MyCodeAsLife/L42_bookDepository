@@ -7,65 +7,9 @@ namespace L42_bookDepository
     {
         static void Main(string[] args)
         {
-            const int CommandAddBook = 1;
-            const int CommandRemoveBook = 2;
-            const int CommandFindBooks = 3;
-            const int CommandShowAllBooks = 4;
-            const int CommandExit = 5;
-
             Depository depository = new Depository();
 
-            bool isOpen = true;
-
-            while (isOpen)
-            {
-                int menuNumber;
-
-                Console.Clear();
-                Console.WriteLine($"Меню.\n{CommandAddBook} - Добавить книгу.\n{CommandRemoveBook} - Удалить книгу по индексу." +
-                                  $"\n{CommandFindBooks} - Найти книги по параметрам(год, автор, название).\n{CommandShowAllBooks}" +
-                                  $" - Показать все книги.\n{CommandExit} - Выход.");
-                Console.Write("\nВыбирите пункт меню: ");
-
-                if (int.TryParse(Console.ReadLine(), out menuNumber))
-                {
-                    Console.Clear();
-
-                    switch (menuNumber)
-                    {
-                        case CommandAddBook:
-                            depository.AddBook();
-                            break;
-
-                        case CommandRemoveBook:
-                            depository.RemoveBook();
-                            break;
-
-                        case CommandFindBooks:
-                            depository.SearchByParametrs();
-                            break;
-
-                        case CommandShowAllBooks:
-                            depository.ShowAllBooks();
-                            break;
-
-                        case CommandExit:
-                            isOpen = false;
-                            continue;
-
-                        default:
-                            Error.Show();
-                            break;
-                    }
-                }
-                else
-                {
-                    Error.Show();
-                }
-
-                Console.WriteLine("\nДля для возврата в меню нажмите любую клавишу...");
-                Console.ReadKey(true);
-            }
+            depository.Run();
         }
     }
 
@@ -110,34 +54,89 @@ namespace L42_bookDepository
 
     class Depository
     {
+        private const int CommandAddBook = 1;
+        private const int CommandRemoveBook = 2;
+        private const int CommandFindBooks = 3;
+        private const int CommandShowAllBooks = 4;
+        private const int CommandExit = 5;
+
         private List<Book> _books = new List<Book>();
 
         public Depository()
         {
-            Fill();
+            StartingFill();
         }
 
-        public int Count
+        private int Count => _books.Count;
+
+        public void Run()
         {
-            get
+            bool isOpen = true;
+
+            while (isOpen)
             {
-                return _books.Count;
+                int menuNumber;
+
+                Console.Clear();
+                Console.WriteLine($"Меню.\n{CommandAddBook} - Добавить книгу.\n{CommandRemoveBook} - Удалить книгу по индексу." +
+                                  $"\n{CommandFindBooks} - Найти книги по параметрам(год, автор, название).\n{CommandShowAllBooks}" +
+                                  $" - Показать все книги.\n{CommandExit} - Выход.");
+                Console.Write("\nВыбирите пункт меню: ");
+
+                if (int.TryParse(Console.ReadLine(), out menuNumber))
+                {
+                    Console.Clear();
+
+                    switch (menuNumber)
+                    {
+                        case CommandAddBook:
+                            AddBook();
+                            break;
+
+                        case CommandRemoveBook:
+                            RemoveBook();
+                            break;
+
+                        case CommandFindBooks:
+                            SearchByParametrs();
+                            break;
+
+                        case CommandShowAllBooks:
+                            ShowAllBooks();
+                            break;
+
+                        case CommandExit:
+                            isOpen = false;
+                            continue;
+
+                        default:
+                            Error.Show();
+                            break;
+                    }
+                }
+                else
+                {
+                    Error.Show();
+                }
+
+                Console.WriteLine("\nДля для возврата в меню нажмите любую клавишу...");
+                Console.ReadKey(true);
             }
         }
 
-        public void ShowBook(int index)
+        private void ShowBook(int index)
         {
             Console.WriteLine($"{index + 1} -\tНаименование: {_books[index].Name}\n\tАвтор: " +
                               $"{_books[index].Author}\n\tГод написания: {_books[index].YearIssue}");
         }
 
-        public void ShowAllBooks()
+        private void ShowAllBooks()
         {
             for (int i = 0; i < _books.Count; i++)
                 ShowBook(i);
         }
 
-        public void AddBook()
+        private void AddBook()
         {
             Console.Write("Введите имя книги: ");
             string bookName = Console.ReadLine();
@@ -151,7 +150,7 @@ namespace L42_bookDepository
             _books.Add(new Book(bookName, author, yearIssue));
         }
 
-        public void RemoveBook()
+        private void RemoveBook()
         {
             Console.Write("Введите номер книги которую необходимо удалить: ");
 
@@ -166,7 +165,7 @@ namespace L42_bookDepository
             }
         }
 
-        public void SearchByParametrs()
+        private void SearchByParametrs()
         {
             Console.Write("Введите данные о книгах которые нужно найти\n(Автор, Название, Год выпуска): ");
             string userInput = Console.ReadLine();
@@ -210,7 +209,7 @@ namespace L42_bookDepository
             }
         }
 
-        private void Fill()
+        private void StartingFill()
         {
             _books.Add(new Book("Двойник", "Достоевский Федр Михайлович", "1846"));
             _books.Add(new Book("Война и Мир", "Толстой Лев Николаевич", "1867"));
