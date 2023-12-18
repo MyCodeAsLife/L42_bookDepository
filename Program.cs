@@ -36,20 +36,6 @@ namespace L42_bookDepository
         public string Author { get; private set; }
 
         public string YearIssue { get; private set; }
-
-        public static Book CreateNew()
-        {
-            Console.Write("Введите имя книги: ");
-            string bookName = Console.ReadLine();
-
-            Console.Write("Введите автора книги: ");
-            string author = Console.ReadLine();
-
-            Console.Write("Введите год написания книги: ");
-            string yearIssue = Console.ReadLine();
-
-            return new Book(bookName, author, yearIssue);
-        }
     }
 
     class Depository
@@ -64,7 +50,7 @@ namespace L42_bookDepository
 
         public Depository()
         {
-            StartingFill();
+            AddBooks();
         }
 
         public void Run()
@@ -208,7 +194,7 @@ namespace L42_bookDepository
             }
         }
 
-        private void StartingFill()
+        private void AddBooks()
         {
             _books.Add(new Book("Двойник", "Достоевский Федр Михайлович", "1846"));
             _books.Add(new Book("Война и Мир", "Толстой Лев Николаевич", "1867"));
